@@ -36,7 +36,16 @@ app.get('/colors/:id', (req, res, next) => {
      */
     // Your code here
     const sql = 'SELECT * FROM colors WHERE id = ?';
+    /**
+     * STEP 2B - SQL Parameters
+     */
+    // Your code here
     const params = [req.params.id];
+    /**
+     * STEP 2C - Call database function
+     *  - return response
+     */
+    // Your code here
     db.get(sql, params, (err, row) => {
         if (err) {
             next(err);
@@ -44,24 +53,13 @@ app.get('/colors/:id', (req, res, next) => {
             res.json(row);
         }
     })
-
-    /**
-     * STEP 2B - SQL Parameters
-     */
-    // Your code here
-
-    /**
-     * STEP 2C - Call database function
-     *  - return response
-     */
-    // Your code here
 });
 
 // Add color
 app.get('/colors/add/:name', (req, res, next) => {
     // SQL INSERT
     const sql = "INSERT INTO colors (name) VALUES (?)";
-    const params = [req.params.name];
+    const params = [req.params.name];    
 
     // SQL QUERY NEW ROW
     const sqlLast = 'SELECT * FROM colors ORDER BY id DESC LIMIT 1';
@@ -74,6 +72,15 @@ app.get('/colors/add/:name', (req, res, next) => {
      *  - return new row
      */
     // Your code here
+    db.run(sql, params, (err) => {
+        if (err) next(err);
+        else {
+            db.get(sqlLast, [], (err, row) => {
+                res.json(row);
+            })
+        }
+    })
+
 })
 
 // Root route - DO NOT MODIFY
